@@ -77,3 +77,64 @@ void E_File::SetPeHeader()
 {
 	PeHeader_Of_file = (PIMAGE_NT_HEADERS)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew);
 }
+
+// extracting PE singnature at te start of PE header which is equal to 50h, 45h, 00h, 00h
+DWORD E_File::PeSingnature()
+{
+	return PeHeader_Of_file->Signature;
+}
+
+//set image header of file
+void E_File::SetImageHeader()
+{
+	Image_Header_Of_File = PeHeader_Of_file->FileHeader;
+}
+
+
+//return the value of machine which defines the exe file can run on which typte of machhines
+WORD E_File::Machine()
+{
+	return Image_Header_Of_File.Machine;
+}
+
+// return Magic value of exe file if it is 0x20b then the exe file is x64 bit and if it is 0x10b it is x32 bit aka x86
+WORD E_File::MagicValue()
+{
+	return PeHeader_Of_file->OptionalHeader.Magic;
+}
+
+//retun number of sections in the exe file
+WORD E_File::NumberOfSections()
+{
+	return Image_Header_Of_File.NumberOfSections;
+}
+
+//retun size of image
+DWORD E_File::SizeOfImage()
+{
+	return PeHeader_Of_file->OptionalHeader.SizeOfImage;
+}
+
+//The size of the optional header, which is required for executable files but not for object files.
+DWORD E_File::SizeOfOptionalHeader()
+{
+	return Image_Header_Of_File.SizeOfOptionalHeader;
+}
+
+//section header offset is  dosheader+dosstub+peheader aka starting offset + e_lfanew + 4bytes(pe signature) + 20bytes(file header) + sizeof(optionalheader)
+void E_File::FetchSectionsOfFile()
+{
+	Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24);
+	std::cout << Sections_Of_File << std::endl;
+	int i = 1;
+	for (i; i <= Image_Header_Of_File.NumberOfSections; i++)
+	{
+		std::cout << "***************************" << std::endl;
+		std::cout << "Name of section: " << Sections_Of_File->Name << std::endl;
+		std::cout << "VirtualAddress of section: " << Sections_Of_File->VirtualAddress << std::endl;
+		std::cout << "Characteristics of section: " << Sections_Of_File->Characteristics << std::endl;
+		std::cout << "PointerToRawData of section: " << Sections_Of_File->PointerToRawData << std::endl;
+		std::cout << "SizeOfRawData of section: " << Sections_Of_File->SizeOfRawData << std::endl;
+		Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24 + (u_char)(40 * i));
+	}
+}
