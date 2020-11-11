@@ -121,6 +121,14 @@ DWORD E_File::SizeOfOptionalHeader()
 	return Image_Header_Of_File.SizeOfOptionalHeader;
 }
 
+//return imagebase value
+ULONGLONG E_File::ImageBase()
+{
+	OptionalHeader = PeHeader_Of_file->OptionalHeader;
+	//return PeHeader_Of_file->OptionalHeader.ImageBase;
+	return OptionalHeader.ImageBase;
+}
+
 //section header offset is  dosheader+dosstub+peheader aka starting offset + e_lfanew + 4bytes(pe signature) + 20bytes(file header) + sizeof(optionalheader)
 void E_File::FetchSectionsOfFile()
 {
@@ -135,6 +143,7 @@ void E_File::FetchSectionsOfFile()
 		std::cout << "Characteristics of section: " << Sections_Of_File->Characteristics << std::endl;
 		std::cout << "PointerToRawData of section: " << Sections_Of_File->PointerToRawData << std::endl;
 		std::cout << "SizeOfRawData of section: " << Sections_Of_File->SizeOfRawData << std::endl;
-		Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24 + (u_char)(40 * i));
+		//Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24 + (u_char)(40 * i));
+		++Sections_Of_File;
 	}
 }
