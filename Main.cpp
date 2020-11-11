@@ -11,7 +11,7 @@ int main()
 {
 	std::cout << "Begin: " << std::endl;
 	E_File TestFile;
-	TestFile.LoadFile(x);
+	TestFile.LoadFile("R:\\My Codes\\PE Parser\\ASM Template.exe");
 	TestFile.MapFile();
 	TestFile.FindStartingAddressOfTheMappedView();
 	TestFile.SetDosHeader();
@@ -23,6 +23,7 @@ int main()
 		TestFile.SetImageHeader();
 		std::cout << "Macine value: " << TestFile.Machine() << std::endl;
 		std::cout << "Number of sections: " << TestFile.NumberOfSections() << std::endl;
+		std::cout << "Imagebase of file: " << TestFile.ImageBase() << std::endl;
 		std::cout << "Size of optional header: " << TestFile.SizeOfOptionalHeader() << std::endl;
 		std::cout << "Size of Image: " << TestFile.SizeOfImage() << std::endl;
 		TestFile.FetchSectionsOfFile();
