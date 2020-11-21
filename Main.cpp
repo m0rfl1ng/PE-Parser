@@ -15,6 +15,9 @@ int main()
 	TestFile.MapFile();
 	TestFile.FindStartingAddressOfTheMappedView();
 	TestFile.SetDosHeader();
+
+
+
 	if (TestFile.IsExe())
 	{
 		TestFile.SetPeHeader();
@@ -27,6 +30,8 @@ int main()
 		std::cout << "Size of optional header: " << TestFile.SizeOfOptionalHeader() << std::endl;
 		std::cout << "Size of Image: " << TestFile.SizeOfImage() << std::endl;
 		TestFile.FetchSectionsOfFile();
+		std::cout << "----------------------------- End of fetching sections -----------------------------" << std::endl;
+		TestFile.FetchResourceDirectory();
 	}
 
 	return 0;
