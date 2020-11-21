@@ -22,6 +22,10 @@ private:
 	IMAGE_OPTIONAL_HEADER64 OptionalHeader;
 	IMAGE_FILE_HEADER Image_Header_Of_File; //the next 20 bytes after pe signature aka  50h, 45h, 00h, 00h
 	PIMAGE_SECTION_HEADER Sections_Of_File;
+
+	// Resources section, .rsrc stuct
+	PIMAGE_RESOURCE_DIRECTORY Resources_Section; //we will point it to the .rsrc section
+
 public:
 	void LoadFile(std::string);
 	void MapFile();
@@ -38,6 +42,7 @@ public:
 	DWORD SizeOfOptionalHeader();
 	ULONGLONG ImageBase();
 	void FetchSectionsOfFile();
+	void FetchResourceDirectory();
 };
 
 #endif
