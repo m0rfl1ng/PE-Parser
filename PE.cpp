@@ -135,8 +135,17 @@ void E_File::FetchSectionsOfFile()
 	Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24);
 	std::cout << Sections_Of_File << std::endl;
 	int i = 1;
+
+	BYTE rsrc[8] = { 0x2E ,0x72, 0x73, 0x72, 0x63 }; //.rsrc in hex values
+
 	for (i; i <= Image_Header_Of_File.NumberOfSections; i++)
 	{
+		if (Sections_Of_File->Name[0] == rsrc[0] && Sections_Of_File->Name[1] == rsrc[1] && Sections_Of_File->Name[2] == rsrc[2] && Sections_Of_File->Name[3] == rsrc[3] && Sections_Of_File->Name[4] == rsrc[4] && Sections_Of_File->Name[5] == rsrc[5])
+		{
+			Resources_Section = (PIMAGE_RESOURCE_DIRECTORY)((u_char*)DosHeader_Of_File + Sections_Of_File->PointerToRawData);
+			
+		}
+
 		std::cout << "***************************" << std::endl;
 		std::cout << "Name of section: " << Sections_Of_File->Name << std::endl;
 		std::cout << "VirtualAddress of section: " << Sections_Of_File->VirtualAddress << std::endl;
@@ -146,4 +155,20 @@ void E_File::FetchSectionsOfFile()
 		//Sections_Of_File = (PIMAGE_SECTION_HEADER)((u_char*)DosHeader_Of_File + DosHeader_Of_File->e_lfanew + Image_Header_Of_File.SizeOfOptionalHeader + (u_char)24 + (u_char)(40 * i));
 		++Sections_Of_File;
 	}
+}
+
+
+//fetching resource rable aka .rsrc section (not ENTRY yet)
+
+void E_File::FetchResourceDirectory()
+{
+	std::cout << std::endl;
+	std::cout << "----------------------------- Start of fetching .rsrc section data -----------------" << std::endl;
+	std::cout << "Characteristics: " << Resources_Section->Characteristics << std::endl;
+	std::cout << "TimeDateStamp: " << Resources_Section->TimeDateStamp << std::endl;
+	std::cout << "MajorVersion: " << Resources_Section->MajorVersion << std::endl;
+	std::cout << "MinorVersion: " << Resources_Section->MinorVersion << std::endl;
+	std::cout << "NumberOfNamedEntries: " << Resources_Section->NumberOfNamedEntries << std::endl;
+	std::cout << "NumberOfIdEntries: " << Resources_Section->NumberOfIdEntries << std::endl;
+	std::cout << "----------------------------- End of fetching .rsrc section data -------------------" << std::endl << std::endl;
 }
